@@ -119,7 +119,7 @@ class GameViewModel : ViewModel() {
         var mummy = (cell as? Cell.MummyOccupied)?.mummy ?: return
         val heroAttack = (hero.minAttack..hero.maxAttack).random()
         mummy = mummy.copy(health = maxOf(mummy.health - heroAttack, 0))
-        println("Hero attack: $heroAttack. Mummy health: ${mummy.health}")
+        println("Hero attacks! Damage: $heroAttack. Mummy health: ${mummy.health}")
         if (mummy.health > 0) {
             gameField[index] = Cell.MummyOccupied(mummy)
         } else {
@@ -130,40 +130,60 @@ class GameViewModel : ViewModel() {
     }
 
     private fun MutableList<Cell>.doMummiesActions() {
-        // TODO mummies moves and attacks
         val mummyIndices = mapIndexedNotNull { index, cell ->
             if (cell is Cell.MummyOccupied) index else null
         }
         val heroIndex = indexOfFirst { it is Cell.HeroOccupied }
+        if (heroIndex == -1) return // No hero found, skip
+
         mummyIndices.forEach { mummyIndex ->
-            val mummy = (this[mummyIndex] as? Cell.MummyOccupied)?.mummy ?: return
-            if (state.value.areNeighbors(heroIndex, mummyIndex)) {
+            val mummy = (this[mummyIndex] as? Cell.MummyOccupied)?.mummy ?: return@forEach
+
+            // Step 1: Check for possible moves towards empty cells
+            val potentialMoves = listOfNotNull(
+                state.value.getUpNeighbor(mummyIndex),
+                state.value.getDownNeighbor(mummyIndex),
+                state.value.getLeftNeighbor(mummyIndex),
+                state.value.getRightNeighbor(mummyIndex),
+            ).filter { this[it] is Cell.Empty }
+
+            // Move mummy if a valid move is found
+            potentialMoves.firstOrNull { state.value.areNeighbors(it, heroIndex) }?.let { move ->
+                // Move mummy
+                this[move] = Cell.MummyOccupied(mummy)
+                this[mummyIndex] = Cell.Empty
+                println("Mummy at $mummyIndex moves to $move")
+
+                // After moving, check if the new position is adjacent to the hero and attack
+                if (state.value.areNeighbors(move, heroIndex)) {
+                    val mummyAttack = (mummy.minAttack..mummy.maxAttack).random()
+                    var hero = (this[heroIndex] as? Cell.HeroOccupied)?.hero ?: return@forEach
+                    hero = hero.copy(health = maxOf(hero.health - mummyAttack, 0))
+                    println("Mummy at $move attacks! Damage: $mummyAttack. Hero health: ${hero.health}")
+
+                    if (hero.health > 0) {
+                        this[heroIndex] = Cell.HeroOccupied(hero)
+                    } else {
+                        println("You lose") // TODO: Handle losing the game
+                    }
+                }
+                return@forEach // No need to check further after moving and attacking
+            }
+
+            // If no move was made, directly check if the mummy is adjacent to the hero and attack
+            if (state.value.areNeighbors(mummyIndex, heroIndex)) {
                 val mummyAttack = (mummy.minAttack..mummy.maxAttack).random()
-                var hero = (this[heroIndex] as? Cell.HeroOccupied)?.hero ?: return
+                var hero = (this[heroIndex] as? Cell.HeroOccupied)?.hero ?: return@forEach
                 hero = hero.copy(health = maxOf(hero.health - mummyAttack, 0))
-                println("Mummy attack: $mummyAttack. Hero health: ${hero.health}")
+                println("Mummy at $mummyIndex attacks! Damage: $mummyAttack. Hero health: ${hero.health}")
+
                 if (hero.health > 0) {
                     this[heroIndex] = Cell.HeroOccupied(hero)
                 } else {
-                    // TODO: lose
-                    println("You lose")
-                }
-            } else {
-                val potentialMoves = listOfNotNull(
-                    state.value.getUpNeighbor(mummyIndex),
-                    state.value.getDownNeighbor(mummyIndex),
-                    state.value.getLeftNeighbor(mummyIndex),
-                    state.value.getRightNeighbor(mummyIndex),
-                ).filter { this[it] is Cell.Empty }
-                var moved = false
-                potentialMoves.forEach { potentialMove ->
-                    if (!moved && state.value.areNeighbors(potentialMove, heroIndex)) {
-                        this[potentialMove] = Cell.MummyOccupied(mummy)
-                        this[mummyIndex] = Cell.Empty
-                        moved = true
-                    }
+                    println("You lose") // TODO: Handle losing the game
                 }
             }
         }
     }
+
 }
