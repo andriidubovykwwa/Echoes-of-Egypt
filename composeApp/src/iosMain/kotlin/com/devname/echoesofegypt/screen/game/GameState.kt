@@ -1,11 +1,12 @@
 package com.devname.echoesofegypt.screen.game
 
-import com.devname.echoesofegypt.data.Cell
-import com.devname.echoesofegypt.data.GameParams
-import com.devname.echoesofegypt.data.Hero
-import com.devname.echoesofegypt.data.LevelGenerator
+import com.devname.echoesofegypt.data.game_params.Cell
+import com.devname.echoesofegypt.data.game_params.GameParams
+import com.devname.echoesofegypt.data.game_params.Hero
+import com.devname.echoesofegypt.data.game_params.LevelGenerator
 
 data class GameState(
+    val level: Int = 0,
     val fieldWidth: Int = GameParams.DEFAULT_FIELD_WIDTH,
     val gameField: List<Cell> = LevelGenerator.generateFirstLevel()
 ) {

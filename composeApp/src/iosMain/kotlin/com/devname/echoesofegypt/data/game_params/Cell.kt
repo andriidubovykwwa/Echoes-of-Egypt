@@ -1,4 +1,4 @@
-package com.devname.echoesofegypt.data
+package com.devname.echoesofegypt.data.game_params
 
 sealed interface Cell {
     data object Empty : Cell

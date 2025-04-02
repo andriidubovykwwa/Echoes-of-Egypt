@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -21,9 +22,9 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun GameScreen(viewModel: GameViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
-    Box(Modifier.fillMaxSize().background(Color.White)) {
+    Box(Modifier.fillMaxSize().safeContentPadding().background(Color.White)) {
         val text =
-            "Health: ${state.hero.health}. Treasure: ${state.hero.hasTreasure}. Potions: ${state.hero.potionAmount}"
+            "Treasure: ${state.hero.hasTreasure}"
         Text(modifier = Modifier.align(Alignment.TopCenter), text = text, fontSize = 14.sp)
         GameFieldComponent(
             Modifier.align(Alignment.Center).fillMaxWidth().padding(5.dp),
@@ -31,15 +32,8 @@ fun GameScreen(viewModel: GameViewModel = koinViewModel()) {
             gameField = state.gameField
         )
         ControlsComponent(
-            Modifier.align(Alignment.BottomCenter),
-            onMoveUp = viewModel::moveUp,
-            onMoveDown = viewModel::moveDown,
-            onMoveLeft = viewModel::moveLeft,
-            onMoveRight = viewModel::moveRight,
-            onAttackUp = viewModel::attackUp,
-            onAttackDown = viewModel::attackDown,
-            onAttackLeft = viewModel::attackLeft,
-            onAttackRight = viewModel::attackRight,
+            Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
+            controls = viewModel.controls,
             canMoveUp = state.canMoveUp,
             canMoveDown = state.canMoveDown,
             canMoveLeft = state.canMoveLeft,
@@ -47,7 +41,10 @@ fun GameScreen(viewModel: GameViewModel = koinViewModel()) {
             canAttackUp = state.canAttackUp,
             canAttackDown = state.canAttackDown,
             canAttackLeft = state.canAttackLeft,
-            canAttackRight = state.canAttackRight
+            canAttackRight = state.canAttackRight,
+            potionsAmount = state.hero.potionAmount,
+            heroMaxHealth = state.hero.maxHealth,
+            heroHealth = state.hero.health
         )
     }
 }

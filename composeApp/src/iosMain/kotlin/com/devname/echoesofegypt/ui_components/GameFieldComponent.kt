@@ -13,18 +13,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.devname.echoesofegypt.data.Cell
+import com.devname.echoesofegypt.data.game_params.Cell
 
 @Composable
 fun GameFieldComponent(modifier: Modifier = Modifier, fieldWidth: Int, gameField: List<Cell>) {
     val fieldHeight = gameField.size / fieldWidth
-    Row(modifier.aspectRatio(fieldWidth/fieldHeight.toFloat())) {
+    Row(modifier.aspectRatio(fieldWidth / fieldHeight.toFloat())) {
         repeat(fieldWidth) { x ->
             Column(Modifier.weight(1f)) {
                 repeat(fieldHeight) { y ->
                     val i = y * fieldWidth + x
                     val cell = gameField[i]
-                    Box(Modifier.weight(1f).aspectRatio(1f).padding(1.dp).background(Color.Cyan), contentAlignment = Alignment.Center) {
+                    Box(
+                        Modifier.weight(1f).aspectRatio(1f).padding(1.dp).background(Color.Cyan),
+                        contentAlignment = Alignment.Center
+                    ) {
                         val hint = when (cell) {
                             Cell.Empty -> ""
                             Cell.Exit -> "E"
@@ -34,7 +37,7 @@ fun GameFieldComponent(modifier: Modifier = Modifier, fieldWidth: Int, gameField
                             Cell.Treasure -> "T"
                             Cell.Wall -> "W"
                         }
-                       Text(text = hint, fontSize = 12.sp)
+                        Text(text = hint, fontSize = 12.sp)
                     }
                 }
             }

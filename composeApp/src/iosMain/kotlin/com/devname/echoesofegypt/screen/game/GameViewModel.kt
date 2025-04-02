@@ -2,70 +2,105 @@ package com.devname.echoesofegypt.screen.game
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devname.echoesofegypt.data.Cell
+import com.devname.echoesofegypt.data.game_params.Cell
+import com.devname.echoesofegypt.data.game_params.Controls
+import com.devname.echoesofegypt.data.game_params.GameParams
+import com.devname.echoesofegypt.data.repository.GameRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class GameViewModel : ViewModel() {
+class GameViewModel(
+    private val repository: GameRepository
+) : ViewModel() {
     private val _state = MutableStateFlow(GameState())
     val state = _state.asStateFlow()
 
-    fun attackLeft() = viewModelScope.launch {
+    val controls = Controls(
+        onMoveUp = ::moveUp,
+        onMoveDown = ::moveDown,
+        onMoveLeft = ::moveLeft,
+        onMoveRight = ::moveRight,
+        onAttackRight = ::attackRight,
+        onAttackDown = ::attackDown,
+        onAttackLeft = ::attackLeft,
+        onAttackUp = ::attackUp,
+        onDrinkPotion = ::drinkPotion,
+    )
+
+    private fun attackLeft() = viewModelScope.launch {
         attack(
             canAttack = state.value.canAttackLeft,
             onGetNeighbor = state.value::getLeftNeighbor
         )
     }
 
-    fun attackRight() = viewModelScope.launch {
+    private fun attackRight() = viewModelScope.launch {
         attack(
             canAttack = state.value.canAttackRight,
             onGetNeighbor = state.value::getRightNeighbor
         )
     }
 
-    fun attackUp() = viewModelScope.launch {
+    private fun attackUp() = viewModelScope.launch {
         attack(
             canAttack = state.value.canAttackUp,
             onGetNeighbor = state.value::getUpNeighbor
         )
     }
 
-    fun attackDown() = viewModelScope.launch {
+    private fun attackDown() = viewModelScope.launch {
         attack(
             canAttack = state.value.canAttackDown,
             onGetNeighbor = state.value::getDownNeighbor
         )
     }
 
-    fun moveLeft() = viewModelScope.launch {
+    private fun moveLeft() = viewModelScope.launch {
         move(
             canMove = state.value.canMoveLeft,
             onGetNeighbor = state.value::getLeftNeighbor
         )
     }
 
-    fun moveRight() = viewModelScope.launch {
+    private fun moveRight() = viewModelScope.launch {
         move(
             canMove = state.value.canMoveRight,
             onGetNeighbor = state.value::getRightNeighbor
         )
     }
 
-    fun moveUp() = viewModelScope.launch {
+    private fun moveUp() = viewModelScope.launch {
         move(
             canMove = state.value.canMoveUp,
             onGetNeighbor = state.value::getUpNeighbor
         )
     }
 
-    fun moveDown() = viewModelScope.launch {
+    private fun moveDown() = viewModelScope.launch {
         move(
             canMove = state.value.canMoveDown,
             onGetNeighbor = state.value::getDownNeighbor
         )
+    }
+
+    private fun drinkPotion() = viewModelScope.launch {
+        val gameField = state.value.gameField.toMutableList()
+        val heroLocationIndex = state.value.heroLocationIndex
+        var hero = (gameField[heroLocationIndex] as? Cell.HeroOccupied)?.hero ?: return@launch
+        if (!hero.canDrinkPotion) return@launch
+        hero = hero.copy(
+            health = minOf(
+                hero.health + GameParams.HEALING_POTION_RESTORE_VALUE,
+                hero.maxHealth
+            ),
+            potionAmount = hero.potionAmount - 1
+        )
+        repository.registerPotionDrink()
+        gameField[heroLocationIndex] = Cell.HeroOccupied(hero)
+        gameField.doMummiesActions()
+        _state.update { it.copy(gameField = gameField) }
     }
 
 
@@ -81,10 +116,12 @@ class GameViewModel : ViewModel() {
         val cell = gameField[index]
         when (cell) {
             is Cell.Treasure -> {
+                repository.registerTreasurePickup()
                 hero = hero.copy(hasTreasure = true)
             }
 
             is Cell.Potion -> {
+                repository.registerPotionPickup()
                 hero = hero.copy(potionAmount = hero.potionAmount + 1)
             }
 
@@ -119,10 +156,12 @@ class GameViewModel : ViewModel() {
         var mummy = (cell as? Cell.MummyOccupied)?.mummy ?: return
         val heroAttack = (hero.minAttack..hero.maxAttack).random()
         mummy = mummy.copy(health = maxOf(mummy.health - heroAttack, 0))
+        repository.registerDamageDealt(heroAttack)
         println("Hero attacks! Damage: $heroAttack. Mummy health: ${mummy.health}")
         if (mummy.health > 0) {
             gameField[index] = Cell.MummyOccupied(mummy)
         } else {
+            repository.registerMummyKill()
             gameField[index] = Cell.Empty
         }
         gameField.doMummiesActions()
@@ -159,6 +198,7 @@ class GameViewModel : ViewModel() {
                     val mummyAttack = (mummy.minAttack..mummy.maxAttack).random()
                     var hero = (this[heroIndex] as? Cell.HeroOccupied)?.hero ?: return@forEach
                     hero = hero.copy(health = maxOf(hero.health - mummyAttack, 0))
+                    repository.registerDamageTaken(mummyAttack)
                     println("Mummy at $move attacks! Damage: $mummyAttack. Hero health: ${hero.health}")
 
                     if (hero.health > 0) {
@@ -175,6 +215,7 @@ class GameViewModel : ViewModel() {
                 val mummyAttack = (mummy.minAttack..mummy.maxAttack).random()
                 var hero = (this[heroIndex] as? Cell.HeroOccupied)?.hero ?: return@forEach
                 hero = hero.copy(health = maxOf(hero.health - mummyAttack, 0))
+                repository.registerDamageTaken(mummyAttack)
                 println("Mummy at $mummyIndex attacks! Damage: $mummyAttack. Hero health: ${hero.health}")
 
                 if (hero.health > 0) {
