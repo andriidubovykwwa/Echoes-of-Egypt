@@ -37,7 +37,7 @@ class DefaultGameRepository : GameRepository {
 
     override fun registerCompletedLvl(value: Int) {
         val newValue = getCompletedLvls() + 1
-        userDefaults.setInteger(newValue.toLong(), forKey = COMPLETED_LVLS_WITHOUT_KILLS_KEY)
+        userDefaults.setInteger(newValue.toLong(), forKey = COMPLETED_LVLS_KEY)
         val newMaxCompletedLvl = maxOf(getMaxCompletedLvl(), value)
         userDefaults.setInteger(newMaxCompletedLvl.toLong(), forKey = MAX_COMPLETED_LVL_KEY)
     }

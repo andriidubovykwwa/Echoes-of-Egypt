@@ -1,9 +1,8 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -17,7 +16,7 @@ kotlin {
             isStatic = true
         }
     }
-    
+
     sourceSets {
 
         commonMain.dependencies {

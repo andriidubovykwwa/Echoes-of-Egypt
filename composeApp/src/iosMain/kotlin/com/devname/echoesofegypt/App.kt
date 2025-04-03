@@ -2,6 +2,7 @@ package com.devname.echoesofegypt
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
+import com.devname.echoesofegypt.screen.Navigation
 import com.devname.echoesofegypt.screen.game.GameScreen
 import org.koin.compose.KoinApplication
 
@@ -9,7 +10,7 @@ import org.koin.compose.KoinApplication
 fun App() {
     KoinApplication(application = { modules(appModule) }) {
         MaterialTheme {
-            GameScreen()
+            Navigation()
         }
     }
 }

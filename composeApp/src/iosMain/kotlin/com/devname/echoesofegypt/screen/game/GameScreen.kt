@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.devname.echoesofegypt.ui_components.ControlsComponent
 import com.devname.echoesofegypt.ui_components.DeathDialog
 import com.devname.echoesofegypt.ui_components.GameFieldComponent
@@ -23,12 +25,17 @@ import com.devname.echoesofegypt.ui_components.NoTreasureDialog
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun GameScreen(viewModel: GameViewModel = koinViewModel()) {
+fun GameScreen(navController: NavController, viewModel: GameViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     Box(Modifier.fillMaxSize().safeContentPadding().background(Color.White)) {
         val text =
             "Treasure: ${state.hero.hasTreasure}"
         Text(modifier = Modifier.align(Alignment.TopCenter), text = text, fontSize = 14.sp)
+        Button(
+            modifier = Modifier.align(Alignment.TopStart),
+            onClick = { navController.popBackStack() }) {
+            Text(text = "Back")
+        }
         GameFieldComponent(
             Modifier.align(Alignment.Center).fillMaxWidth().padding(5.dp),
             fieldWidth = state.fieldWidth,
