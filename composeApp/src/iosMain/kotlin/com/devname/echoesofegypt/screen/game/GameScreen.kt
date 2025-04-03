@@ -16,7 +16,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devname.echoesofegypt.ui_components.ControlsComponent
+import com.devname.echoesofegypt.ui_components.DeathDialog
 import com.devname.echoesofegypt.ui_components.GameFieldComponent
+import com.devname.echoesofegypt.ui_components.LevelCompletedDialog
+import com.devname.echoesofegypt.ui_components.NoTreasureDialog
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -46,5 +49,16 @@ fun GameScreen(viewModel: GameViewModel = koinViewModel()) {
             heroMaxHealth = state.hero.maxHealth,
             heroHealth = state.hero.health
         )
+    }
+    when (state.activeDialog) {
+        GameState.Dialog.LEVEL_COMPLETED -> LevelCompletedDialog(
+            onNext = viewModel::nextLevel,
+            onRestart = viewModel::restart,
+            level = state.level
+        )
+
+        GameState.Dialog.DEATH -> DeathDialog(onRestart = viewModel::restart)
+        GameState.Dialog.NO_TREASURE -> NoTreasureDialog(onOk = viewModel::closeDialog)
+        null -> {}
     }
 }

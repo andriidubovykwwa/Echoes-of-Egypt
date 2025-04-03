@@ -6,10 +6,15 @@ import com.devname.echoesofegypt.data.game_params.Hero
 import com.devname.echoesofegypt.data.game_params.LevelGenerator
 
 data class GameState(
-    val level: Int = 0,
+    val level: Int = 1,
     val fieldWidth: Int = GameParams.DEFAULT_FIELD_WIDTH,
-    val gameField: List<Cell> = LevelGenerator.generateFirstLevel()
+    val gameField: List<Cell> = LevelGenerator.generateLevel(level),
+    val activeDialog: Dialog? = null
 ) {
+    enum class Dialog {
+        LEVEL_COMPLETED, DEATH, NO_TREASURE
+    }
+
     val heroLocationIndex: Int
         get() = gameField.indexOfFirst { it is Cell.HeroOccupied }
 

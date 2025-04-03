@@ -11,9 +11,17 @@ object LevelGenerator {
         - - - - - h - -
         - - - w - - - -
     """
+    const val MAX_LVL = 2
 
-    fun generateFirstLevel(): List<Cell> {
-        val lvlStr = LVL_1.replace("\\s".toRegex(), "") // Remove whitespaces
+    fun generateLevel(lvl: Int): List<Cell> {
+        return when (lvl) {
+            1 -> getLevelFromString(LVL_1)
+            else -> getLevelFromString(LVL_1)
+        }
+    }
+
+    private fun getLevelFromString(str: String): List<Cell> {
+        val lvlStr = str.replace("\\s".toRegex(), "") // Remove whitespaces
         return lvlStr.map {
             when (it) {
                 'w' -> Cell.Wall

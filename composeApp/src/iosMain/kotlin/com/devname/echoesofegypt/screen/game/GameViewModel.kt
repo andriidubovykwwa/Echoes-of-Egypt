@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.devname.echoesofegypt.data.game_params.Cell
 import com.devname.echoesofegypt.data.game_params.Controls
 import com.devname.echoesofegypt.data.game_params.GameParams
+import com.devname.echoesofegypt.data.game_params.LevelGenerator
 import com.devname.echoesofegypt.data.repository.GameRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,6 +29,25 @@ class GameViewModel(
         onAttackUp = ::attackUp,
         onDrinkPotion = ::drinkPotion,
     )
+
+    fun restart() = viewModelScope.launch {
+        _state.update { GameState() }
+    }
+
+    fun nextLevel() = viewModelScope.launch {
+        val newLevel = state.value.level + 1
+        _state.update {
+            GameState(
+                level = newLevel,
+                gameField = LevelGenerator.generateLevel(newLevel),
+                activeDialog = null
+            )
+        }
+    }
+
+    fun closeDialog() = viewModelScope.launch {
+        _state.update { it.copy(activeDialog = null) }
+    }
 
     private fun attackLeft() = viewModelScope.launch {
         attack(
@@ -127,10 +147,10 @@ class GameViewModel(
 
             is Cell.Exit -> {
                 if (hero.hasTreasure) {
-                    println("Win ")// TODO: win
+                    _state.update { it.copy(activeDialog = GameState.Dialog.LEVEL_COMPLETED) }
                     return
                 } else {
-                    println("You don't have treasure dialog") // TODO: show dialog
+                    _state.update { it.copy(activeDialog = GameState.Dialog.NO_TREASURE) }
                     return
                 }
             }
@@ -204,7 +224,7 @@ class GameViewModel(
                     if (hero.health > 0) {
                         this[heroIndex] = Cell.HeroOccupied(hero)
                     } else {
-                        println("You lose") // TODO: Handle losing the game
+                        _state.update { it.copy(activeDialog = GameState.Dialog.DEATH) }
                     }
                 }
                 return@forEach // No need to check further after moving and attacking
@@ -221,7 +241,7 @@ class GameViewModel(
                 if (hero.health > 0) {
                     this[heroIndex] = Cell.HeroOccupied(hero)
                 } else {
-                    println("You lose") // TODO: Handle losing the game
+                    _state.update { it.copy(activeDialog = GameState.Dialog.DEATH) }
                 }
             }
         }
