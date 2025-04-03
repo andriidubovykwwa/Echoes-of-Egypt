@@ -1,27 +1,115 @@
 package com.devname.echoesofegypt.data.repository
 
+import platform.Foundation.NSUserDefaults
+
 class DefaultGameRepository : GameRepository {
+    private val userDefaults = NSUserDefaults.standardUserDefaults()
+
     override fun registerMummyKill() {
-        // TODO
+        val newValue = getMummyKills() + 1
+        userDefaults.setInteger(newValue.toLong(), forKey = MUMMY_KILLS_KEY)
     }
 
     override fun registerPotionDrink() {
-        // TODO
+        val newValue = getPotionDrinks() + 1
+        userDefaults.setInteger(newValue.toLong(), forKey = POTION_DRINKS_KEY)
     }
 
     override fun registerDamageTaken(value: Int) {
-        // TODO
+        val newValue = getDamageTaken() + value
+        userDefaults.setInteger(newValue.toLong(), forKey = DAMAGE_TAKEN_KEY)
     }
 
     override fun registerDamageDealt(value: Int) {
-        // TODO
+        val newValue = getDamageDealt() + value
+        userDefaults.setInteger(newValue.toLong(), forKey = DAMAGE_DEALT_KEY)
     }
 
     override fun registerPotionPickup() {
-        // TODO
+        val newValue = getPotionPickups() + 1
+        userDefaults.setInteger(newValue.toLong(), forKey = POTION_PICKUPS_KEY)
     }
 
     override fun registerTreasurePickup() {
-        // TODO
+        val newValue = getTreasurePickups() + 1
+        userDefaults.setInteger(newValue.toLong(), forKey = TREASURE_PICKUPS_KEY)
+    }
+
+    override fun registerCompletedLvl(value: Int) {
+        val newValue = getCompletedLvls() + 1
+        userDefaults.setInteger(newValue.toLong(), forKey = COMPLETED_LVLS_WITHOUT_KILLS_KEY)
+        val newMaxCompletedLvl = maxOf(getMaxCompletedLvl(), value)
+        userDefaults.setInteger(newMaxCompletedLvl.toLong(), forKey = MAX_COMPLETED_LVL_KEY)
+    }
+
+    override fun registerCompletedLvlWithoutKills() {
+        val newValue = getCompletedLvlsWithoutKills() + 1
+        userDefaults.setInteger(newValue.toLong(), forKey = COMPLETED_LVLS_WITHOUT_KILLS_KEY)
+    }
+
+    override fun getMummyKills(): Int {
+        return if (userDefaults.objectForKey(MUMMY_KILLS_KEY) != null) {
+            userDefaults.integerForKey(MUMMY_KILLS_KEY).toInt()
+        } else 0
+    }
+
+    override fun getPotionDrinks(): Int {
+        return if (userDefaults.objectForKey(POTION_DRINKS_KEY) != null) {
+            userDefaults.integerForKey(POTION_DRINKS_KEY).toInt()
+        } else 0
+    }
+
+    override fun getDamageTaken(): Int {
+        return if (userDefaults.objectForKey(DAMAGE_TAKEN_KEY) != null) {
+            userDefaults.integerForKey(DAMAGE_TAKEN_KEY).toInt()
+        } else 0
+    }
+
+    override fun getDamageDealt(): Int {
+        return if (userDefaults.objectForKey(DAMAGE_DEALT_KEY) != null) {
+            userDefaults.integerForKey(DAMAGE_DEALT_KEY).toInt()
+        } else 0
+    }
+
+    override fun getPotionPickups(): Int {
+        return if (userDefaults.objectForKey(POTION_PICKUPS_KEY) != null) {
+            userDefaults.integerForKey(POTION_PICKUPS_KEY).toInt()
+        } else 0
+    }
+
+    override fun getTreasurePickups(): Int {
+        return if (userDefaults.objectForKey(TREASURE_PICKUPS_KEY) != null) {
+            userDefaults.integerForKey(TREASURE_PICKUPS_KEY).toInt()
+        } else 0
+    }
+
+    override fun getCompletedLvls(): Int {
+        return if (userDefaults.objectForKey(COMPLETED_LVLS_KEY) != null) {
+            userDefaults.integerForKey(COMPLETED_LVLS_KEY).toInt()
+        } else 0
+    }
+
+    override fun getCompletedLvlsWithoutKills(): Int {
+        return if (userDefaults.objectForKey(COMPLETED_LVLS_WITHOUT_KILLS_KEY) != null) {
+            userDefaults.integerForKey(COMPLETED_LVLS_WITHOUT_KILLS_KEY).toInt()
+        } else 0
+    }
+
+    override fun getMaxCompletedLvl(): Int {
+        return if (userDefaults.objectForKey(MAX_COMPLETED_LVL_KEY) != null) {
+            userDefaults.integerForKey(MAX_COMPLETED_LVL_KEY).toInt()
+        } else 0
+    }
+
+    companion object {
+        private const val MUMMY_KILLS_KEY = "mummy_kills"
+        private const val POTION_DRINKS_KEY = "potion_drinks"
+        private const val DAMAGE_TAKEN_KEY = "damage_taken"
+        private const val DAMAGE_DEALT_KEY = "damage_dealt"
+        private const val POTION_PICKUPS_KEY = "potion_pickups"
+        private const val TREASURE_PICKUPS_KEY = "treasure_pickups"
+        private const val COMPLETED_LVLS_KEY = "completed_lvls"
+        private const val COMPLETED_LVLS_WITHOUT_KILLS_KEY = "completed_lvls_without_kills"
+        private const val MAX_COMPLETED_LVL_KEY = "max_completed_lvl"
     }
 }

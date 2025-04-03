@@ -11,13 +11,65 @@ object LevelGenerator {
         - - - - - h - -
         - - - w - - - -
     """
-    const val MAX_LVL = 2
+    private val levels = listOf(
+        """
+        p - - - - - - e
+        - w w - t - - -
+        - w - - - w - -
+        - w - m - w - -
+        - w w w w w - -
+        - - - h - - - -
+        - p - - - - - -
+        - - - - - - - -
+        """, // lvl 1
+        """
+        p - - - w w w w
+        - - m - - - - -
+        - w w w w - w e
+        - - - t - - w -
+        w w w w - - w -
+        - - - - - - w -
+        - p h - w - w -
+        - - - - - - - -
+        """, // lvl 2
+        """
+        p - w w w w - -
+        - - - - - w e -
+        w w - w - w - -
+        - - m t - - - -
+        - w - - - w w -
+        h - - w - - - -
+        - - p - - - m -
+        w w w w w - - -
+        """, // lvl 3
+        """
+        p - - - w - w w
+        - w w - w - - e
+        - w - - - w - -
+        - - - m t - - -
+        w w - w - w - -
+        - - p - - - h -
+        - w - w w w w -
+        - - - - - - - -
+        """, // lvl 4
+        """
+        p - w w w w - w
+        - - - - - - - e
+        w w - w - w w -
+        - - - - - - - -
+        - w m t w w - -
+        h - - w - - p -
+        - - - - - - - -
+        w w w w w - - -
+        """, // lvl 5
+    )
+
+    val maxLvl: Int
+        get() = levels.size
 
     fun generateLevel(lvl: Int): List<Cell> {
-        return when (lvl) {
-            1 -> getLevelFromString(LVL_1)
-            else -> getLevelFromString(LVL_1)
-        }
+        if (lvl > maxLvl || lvl < 1) return getLevelFromString(levels.first())
+        return getLevelFromString(levels[lvl - 1])
     }
 
     private fun getLevelFromString(str: String): List<Cell> {

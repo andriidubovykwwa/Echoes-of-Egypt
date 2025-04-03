@@ -28,7 +28,7 @@ fun LevelCompletedDialog(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (level < LevelGenerator.MAX_LVL) {
+                if (level < LevelGenerator.maxLvl) {
                     Text(text = "You completed level $level")
                     Button(onClick = onNext) {
                         Text(text = "Next")

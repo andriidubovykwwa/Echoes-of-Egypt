@@ -9,7 +9,8 @@ data class GameState(
     val level: Int = 1,
     val fieldWidth: Int = GameParams.DEFAULT_FIELD_WIDTH,
     val gameField: List<Cell> = LevelGenerator.generateLevel(level),
-    val activeDialog: Dialog? = null
+    val activeDialog: Dialog? = null,
+    val currentLvlKills: Int = 0
 ) {
     enum class Dialog {
         LEVEL_COMPLETED, DEATH, NO_TREASURE

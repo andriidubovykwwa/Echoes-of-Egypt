@@ -147,6 +147,10 @@ class GameViewModel(
 
             is Cell.Exit -> {
                 if (hero.hasTreasure) {
+                    repository.registerCompletedLvl(state.value.level)
+                    if (state.value.currentLvlKills == 0) {
+                        repository.registerCompletedLvlWithoutKills()
+                    }
                     _state.update { it.copy(activeDialog = GameState.Dialog.LEVEL_COMPLETED) }
                     return
                 } else {
@@ -181,6 +185,7 @@ class GameViewModel(
         if (mummy.health > 0) {
             gameField[index] = Cell.MummyOccupied(mummy)
         } else {
+            _state.update { it.copy(currentLvlKills = it.currentLvlKills + 1) }
             repository.registerMummyKill()
             gameField[index] = Cell.Empty
         }
