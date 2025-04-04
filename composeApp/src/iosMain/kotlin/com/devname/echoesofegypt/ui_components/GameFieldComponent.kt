@@ -22,23 +22,10 @@ fun GameFieldComponent(modifier: Modifier = Modifier, fieldWidth: Int, gameField
         repeat(fieldWidth) { x ->
             Column(Modifier.weight(1f)) {
                 repeat(fieldHeight) { y ->
-                    val i = y * fieldWidth + x
-                    val cell = gameField[i]
-                    Box(
-                        Modifier.weight(1f).aspectRatio(1f).padding(1.dp).background(Color.Cyan),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        val hint = when (cell) {
-                            Cell.Empty -> ""
-                            Cell.Exit -> "E"
-                            is Cell.HeroOccupied -> "H"
-                            is Cell.MummyOccupied -> "M"
-                            Cell.Potion -> "P"
-                            Cell.Treasure -> "T"
-                            Cell.Wall -> "W"
-                        }
-                        Text(text = hint, fontSize = 12.sp)
-                    }
+                    CellComponent(
+                        Modifier.weight(1f).aspectRatio(1f),
+                        cell = gameField[y * fieldWidth + x]
+                    )
                 }
             }
         }

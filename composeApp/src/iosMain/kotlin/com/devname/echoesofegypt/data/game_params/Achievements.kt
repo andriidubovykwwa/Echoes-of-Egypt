@@ -40,10 +40,10 @@ enum class Achievement(val type: AchievementType, val target: Int) {
 
 enum class AchievementType(private val template: String) {
     MUMMY_KILLS("Kill %d mummies"),
-    POTION_DRINKS("Drink %d potion"),
+    POTION_DRINKS("Drink %d potions"),
     DAMAGE_TAKEN("Deal %d damage"),
     DAMAGE_DEALT("Take %d damage"),
-    POTION_PICKUPS("Pickup %d potion"),
+    POTION_PICKUPS("Pickup %d potions"),
     TREASURE_PICKUPS("Pickup %d treasure"),
     COMPLETED_LVLS("Complete %d levels"),
     COMPLETED_LVLS_WITHOUT_KILLS("Complete %d levels without killing any mummies"),
