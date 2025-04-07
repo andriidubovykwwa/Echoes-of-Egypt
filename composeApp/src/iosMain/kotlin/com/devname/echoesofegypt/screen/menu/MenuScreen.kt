@@ -1,5 +1,10 @@
 package com.devname.echoesofegypt.screen.menu
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -51,6 +57,23 @@ fun MenuScreen(navController: NavController, viewModel: MenuViewModel = koinView
         OrientationManager().orientation = OrientationManager.Orientation.PORTRAIT
     }
     LaunchedEffect(state.music) { SoundManager.playMusic(state.music) }
+    val infiniteTransition = rememberInfiniteTransition()
+    val titleRotation by infiniteTransition.animateFloat(
+        initialValue = -15f,
+        targetValue = 15f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2500),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+    val playButtonScale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.15f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2500),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
     Box(
         Modifier.fillMaxSize().paint(
             painter = painterResource(Res.drawable.bg2),
@@ -63,13 +86,18 @@ fun MenuScreen(navController: NavController, viewModel: MenuViewModel = koinView
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 30.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 30.dp).graphicsLayer {
+                    rotationY = titleRotation
+                },
                 painter = painterResource(Res.drawable.app_title),
                 contentDescription = stringResource(Res.string.app_name),
                 contentScale = ContentScale.FillWidth
             )
             MenuButton(
-                Modifier.size(UiConfig.bigMenuButtonSize),
+                Modifier.size(UiConfig.bigMenuButtonSize).graphicsLayer {
+                    scaleX = playButtonScale
+                    scaleY = playButtonScale
+                },
                 description = stringResource(Res.string.play),
                 painter = painterResource(Res.drawable.play_button),
                 onClick = { navController.navigate(Screen.Game) }

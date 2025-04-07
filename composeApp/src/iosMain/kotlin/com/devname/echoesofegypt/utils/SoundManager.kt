@@ -46,43 +46,64 @@ object SoundManager {
     }
 
     fun playAttack(volume: Int) {
-        if (volume == 0) return
+        if (volume == 0) {
+            attackPlayer?.stop()
+            return
+        }
         attackPlayer?.let { it.volume = 0.1f * volume }
         attackPlayer?.play()
     }
 
     fun playStep(volume: Int) {
-        if (volume == 0) return
+        if (volume == 0) {
+            stepPlayer?.stop()
+            return
+        }
         stepPlayer?.let { it.volume = 0.1f * volume }
         stepPlayer?.play()
     }
 
     fun playLose(volume: Int) {
-        if (volume == 0) return
+        if (volume == 0) {
+            losePlayer?.stop()
+            return
+        }
         losePlayer?.let { it.volume = 0.1f * volume }
         losePlayer?.play()
     }
 
     fun playWin(volume: Int) {
-        if (volume == 0) return
+        if (volume == 0) {
+            winPlayer?.stop()
+            return
+        }
         winPlayer?.let { it.volume = 0.1f * volume }
         winPlayer?.play()
     }
 
     fun playItemPickup(volume: Int) {
-        if (volume == 0) return
+        if (volume == 0) {
+            itemPickupPlayer?.stop()
+            return
+        }
         itemPickupPlayer?.let { it.volume = 0.1f * volume }
         itemPickupPlayer?.play()
     }
 
     fun playPotionDrink(volume: Int) {
-        if (volume == 0) return
+        if (volume == 0) {
+            potionDrinkPlayer?.stop()
+            return
+        }
         potionDrinkPlayer?.let { it.volume = 0.1f * volume }
         potionDrinkPlayer?.play()
     }
 
     fun playMummyDeath(volume: Int) {
-        if (volume == 0) return
+        if (volume == 0) {
+            mummyDeathPlayer?.stop()
+            return
+        }
         mummyDeathPlayer?.let { it.volume = 0.1f * volume }
         mummyDeathPlayer?.play()
     }
