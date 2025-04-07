@@ -101,6 +101,26 @@ class DefaultGameRepository : GameRepository {
         } else 0
     }
 
+    override fun setMusic(value: Int) {
+        userDefaults.setInteger(value.toLong(), forKey = MUSIC_KEY)
+    }
+
+    override fun setSounds(value: Int) {
+        userDefaults.setInteger(value.toLong(), forKey = SOUNDS_KEY)
+    }
+
+    override fun getMusic(): Int {
+        return if (userDefaults.objectForKey(MUSIC_KEY) != null) {
+            userDefaults.integerForKey(MUSIC_KEY).toInt()
+        } else GameRepository.MAX_SOUND_VALUE / 2
+    }
+
+    override fun getSounds(): Int {
+        return if (userDefaults.objectForKey(SOUNDS_KEY) != null) {
+            userDefaults.integerForKey(SOUNDS_KEY).toInt()
+        } else GameRepository.MAX_SOUND_VALUE / 2
+    }
+
     companion object {
         private const val MUMMY_KILLS_KEY = "mummy_kills"
         private const val POTION_DRINKS_KEY = "potion_drinks"
@@ -111,5 +131,8 @@ class DefaultGameRepository : GameRepository {
         private const val COMPLETED_LVLS_KEY = "completed_lvls"
         private const val COMPLETED_LVLS_WITHOUT_KILLS_KEY = "completed_lvls_without_kills"
         private const val MAX_COMPLETED_LVL_KEY = "max_completed_lvl"
+
+        private const val MUSIC_KEY = "music"
+        private const val SOUNDS_KEY = "sounds"
     }
 }

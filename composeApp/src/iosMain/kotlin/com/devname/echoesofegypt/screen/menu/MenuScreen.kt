@@ -13,15 +13,20 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.devname.echoesofegypt.screen.Screen
 import com.devname.echoesofegypt.ui_components.MenuButton
+import com.devname.echoesofegypt.ui_components.SettingsDialog
 import com.devname.echoesofegypt.utils.OrientationManager
+import com.devname.echoesofegypt.utils.SoundManager
 import com.devname.echoesofegypt.utils.UiConfig
 import echoesofegypt.composeapp.generated.resources.Res
 import echoesofegypt.composeapp.generated.resources.achievements
@@ -37,12 +42,15 @@ import echoesofegypt.composeapp.generated.resources.tutorial
 import echoesofegypt.composeapp.generated.resources.tutorial_button
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun MenuScreen(navController: NavController) {
+fun MenuScreen(navController: NavController, viewModel: MenuViewModel = koinViewModel()) {
+    val state by viewModel.state.collectAsState()
     LaunchedEffect(Unit) {
         OrientationManager().orientation = OrientationManager.Orientation.PORTRAIT
     }
+    LaunchedEffect(state.music) { SoundManager.playMusic(state.music) }
     Box(
         Modifier.fillMaxSize().paint(
             painter = painterResource(Res.drawable.bg2),
@@ -88,8 +96,17 @@ fun MenuScreen(navController: NavController) {
                 Modifier.size(UiConfig.smallMenuButtonSize),
                 description = stringResource(Res.string.settings),
                 painter = painterResource(Res.drawable.settings_button),
-                onClick = { /* TODO */ }
+                onClick = { viewModel.openSettings() }
             )
         }
+    }
+    if (state.isSettingsOpened) {
+        SettingsDialog(
+            music = state.music,
+            sounds = state.sounds,
+            onSave = viewModel::closeSettings,
+            onChangeSounds = viewModel::setSounds,
+            onChangeMusic = viewModel::setMusic
+        )
     }
 }

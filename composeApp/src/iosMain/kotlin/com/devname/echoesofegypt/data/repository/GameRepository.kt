@@ -9,7 +9,6 @@ interface GameRepository {
     fun registerTreasurePickup()
     fun registerCompletedLvl(value: Int)
     fun registerCompletedLvlWithoutKills()
-
     fun getMummyKills(): Int
     fun getPotionDrinks(): Int
     fun getDamageTaken(): Int
@@ -18,6 +17,14 @@ interface GameRepository {
     fun getTreasurePickups(): Int
     fun getCompletedLvls(): Int
     fun getCompletedLvlsWithoutKills(): Int
-
     fun getMaxCompletedLvl(): Int
+
+    fun setMusic(value: Int)
+    fun setSounds(value: Int)
+    fun getMusic(): Int
+    fun getSounds(): Int
+
+    companion object {
+        const val MAX_SOUND_VALUE = 10
+    }
 }

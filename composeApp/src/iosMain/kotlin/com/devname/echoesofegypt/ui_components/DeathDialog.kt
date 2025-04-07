@@ -56,9 +56,9 @@ fun DeathDialog(
     onRestart: () -> Unit,
 ) {
     Dialog(onDismissRequest = {}) {
-        Box(Modifier.fillMaxSize()) {
+        Box(modifier.fillMaxSize()) {
             Box(
-                modifier.paint(
+                Modifier.paint(
                     painter = painterResource(Res.drawable.bg_dialog),
                     contentScale = ContentScale.FillBounds
                 ).aspectRatio(0.805f).width(IntrinsicSize.Min),

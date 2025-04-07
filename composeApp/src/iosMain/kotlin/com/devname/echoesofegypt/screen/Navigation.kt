@@ -20,9 +20,7 @@ fun Navigation() {
         navController = navController,
         startDestination = Screen.Menu
     ) {
-        // TODD: add splash
-        // TODO: add sounds
-        // TODO: add option dialog
+        // TODO: add splash
         composable<Screen.Menu> { MenuScreen(navController) }
         composable<Screen.Game> { GameScreen(navController) }
         composable<Screen.Achievements> { AchievementsScreen(navController) }

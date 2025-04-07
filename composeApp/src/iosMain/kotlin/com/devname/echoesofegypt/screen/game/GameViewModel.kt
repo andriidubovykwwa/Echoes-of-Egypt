@@ -7,6 +7,7 @@ import com.devname.echoesofegypt.data.game_params.Controls
 import com.devname.echoesofegypt.data.game_params.GameParams
 import com.devname.echoesofegypt.data.game_params.LevelGenerator
 import com.devname.echoesofegypt.data.repository.GameRepository
+import com.devname.echoesofegypt.utils.SoundManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -17,6 +18,12 @@ class GameViewModel(
 ) : ViewModel() {
     private val _state = MutableStateFlow(GameState())
     val state = _state.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            _state.update { it.copy(sounds = repository.getSounds()) }
+        }
+    }
 
     val controls = Controls(
         onMoveUp = ::moveUp,
@@ -40,7 +47,8 @@ class GameViewModel(
             GameState(
                 level = newLevel,
                 gameField = LevelGenerator.generateLevel(newLevel),
-                activeDialog = null
+                activeDialog = null,
+                sounds = it.sounds
             )
         }
     }
@@ -110,6 +118,7 @@ class GameViewModel(
         val heroLocationIndex = state.value.heroLocationIndex
         var hero = (gameField[heroLocationIndex] as? Cell.HeroOccupied)?.hero ?: return@launch
         if (!hero.canDrinkPotion) return@launch
+        SoundManager.playPotionDrink(state.value.sounds)
         hero = hero.copy(
             health = minOf(
                 hero.health + GameParams.HEALING_POTION_RESTORE_VALUE,
@@ -129,6 +138,7 @@ class GameViewModel(
         onGetNeighbor: (Int) -> Int?
     ) {
         if (!canMove) return
+        SoundManager.playStep(state.value.sounds)
         val gameField = state.value.gameField.toMutableList()
         val heroLocationIndex = state.value.heroLocationIndex
         var hero = (gameField[heroLocationIndex] as? Cell.HeroOccupied)?.hero ?: return
@@ -137,11 +147,13 @@ class GameViewModel(
         when (cell) {
             is Cell.Treasure -> {
                 repository.registerTreasurePickup()
+                SoundManager.playItemPickup(state.value.sounds)
                 hero = hero.copy(hasTreasure = true)
             }
 
             is Cell.Potion -> {
                 repository.registerPotionPickup()
+                SoundManager.playItemPickup(state.value.sounds)
                 hero = hero.copy(potionAmount = hero.potionAmount + 1)
             }
 
@@ -151,6 +163,7 @@ class GameViewModel(
                     if (state.value.currentLvlKills == 0) {
                         repository.registerCompletedLvlWithoutKills()
                     }
+                    SoundManager.playWin(state.value.sounds)
                     _state.update { it.copy(activeDialog = GameState.Dialog.LEVEL_COMPLETED) }
                     return
                 } else {
@@ -172,6 +185,7 @@ class GameViewModel(
         onGetNeighbor: (Int) -> Int?
     ) {
         if (!canAttack) return
+        SoundManager.playAttack(state.value.sounds)
         val gameField = state.value.gameField.toMutableList()
         val heroLocationIndex = state.value.heroLocationIndex
         val hero = (gameField[heroLocationIndex] as? Cell.HeroOccupied)?.hero ?: return
@@ -181,10 +195,10 @@ class GameViewModel(
         val heroAttack = (hero.minAttack..hero.maxAttack).random()
         mummy = mummy.copy(health = maxOf(mummy.health - heroAttack, 0))
         repository.registerDamageDealt(heroAttack)
-        println("Hero attacks! Damage: $heroAttack. Mummy health: ${mummy.health}")
         if (mummy.health > 0) {
             gameField[index] = Cell.MummyOccupied(mummy)
         } else {
+            SoundManager.playMummyDeath(state.value.sounds)
             _state.update { it.copy(currentLvlKills = it.currentLvlKills + 1) }
             repository.registerMummyKill()
             gameField[index] = Cell.Empty
@@ -216,19 +230,19 @@ class GameViewModel(
                 // Move mummy
                 this[move] = Cell.MummyOccupied(mummy)
                 this[mummyIndex] = Cell.Empty
-                println("Mummy at $mummyIndex moves to $move")
 
                 // After moving, check if the new position is adjacent to the hero and attack
                 if (state.value.areNeighbors(move, heroIndex)) {
+                    SoundManager.playAttack(state.value.sounds)
                     val mummyAttack = (mummy.minAttack..mummy.maxAttack).random()
                     var hero = (this[heroIndex] as? Cell.HeroOccupied)?.hero ?: return@forEach
                     hero = hero.copy(health = maxOf(hero.health - mummyAttack, 0))
                     repository.registerDamageTaken(mummyAttack)
-                    println("Mummy at $move attacks! Damage: $mummyAttack. Hero health: ${hero.health}")
 
                     if (hero.health > 0) {
                         this[heroIndex] = Cell.HeroOccupied(hero)
                     } else {
+                        SoundManager.playLose(state.value.sounds)
                         _state.update { it.copy(activeDialog = GameState.Dialog.DEATH) }
                     }
                 }
@@ -237,15 +251,16 @@ class GameViewModel(
 
             // If no move was made, directly check if the mummy is adjacent to the hero and attack
             if (state.value.areNeighbors(mummyIndex, heroIndex)) {
+                SoundManager.playAttack(state.value.sounds)
                 val mummyAttack = (mummy.minAttack..mummy.maxAttack).random()
                 var hero = (this[heroIndex] as? Cell.HeroOccupied)?.hero ?: return@forEach
                 hero = hero.copy(health = maxOf(hero.health - mummyAttack, 0))
                 repository.registerDamageTaken(mummyAttack)
-                println("Mummy at $mummyIndex attacks! Damage: $mummyAttack. Hero health: ${hero.health}")
 
                 if (hero.health > 0) {
                     this[heroIndex] = Cell.HeroOccupied(hero)
                 } else {
+                    SoundManager.playLose(state.value.sounds)
                     _state.update { it.copy(activeDialog = GameState.Dialog.DEATH) }
                 }
             }
