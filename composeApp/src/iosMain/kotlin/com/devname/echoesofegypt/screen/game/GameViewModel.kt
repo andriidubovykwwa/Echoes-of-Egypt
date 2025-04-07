@@ -43,10 +43,12 @@ class GameViewModel(
 
     fun nextLevel() = viewModelScope.launch {
         val newLevel = state.value.level + 1
+        val heroHealth = state.value.hero.health
+        val potionAmount = state.value.hero.potionAmount
         _state.update {
             GameState(
                 level = newLevel,
-                gameField = LevelGenerator.generateLevel(newLevel),
+                gameField = LevelGenerator.generateLevel(newLevel, heroHealth, potionAmount),
                 activeDialog = null,
                 sounds = it.sounds
             )
