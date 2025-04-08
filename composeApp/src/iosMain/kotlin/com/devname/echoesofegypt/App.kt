@@ -1,9 +1,8 @@
 package com.devname.echoesofegypt
 
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import com.devname.echoesofegypt.screen.Navigation
-import com.devname.echoesofegypt.screen.game.GameScreen
 import org.koin.compose.KoinApplication
 
 @Composable

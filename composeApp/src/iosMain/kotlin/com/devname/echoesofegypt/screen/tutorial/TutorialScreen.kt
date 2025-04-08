@@ -3,8 +3,6 @@ package com.devname.echoesofegypt.screen.tutorial
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,34 +12,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.devname.echoesofegypt.screen.Screen
 import com.devname.echoesofegypt.ui_components.AppText
 import com.devname.echoesofegypt.ui_components.MenuButton
 import com.devname.echoesofegypt.utils.UiConfig
 import echoesofegypt.composeapp.generated.resources.Res
 import echoesofegypt.composeapp.generated.resources.achievements
-import echoesofegypt.composeapp.generated.resources.achievements_tuturial_text
-import echoesofegypt.composeapp.generated.resources.app_name
-import echoesofegypt.composeapp.generated.resources.app_title
+import echoesofegypt.composeapp.generated.resources.achievements_tutorial_text
 import echoesofegypt.composeapp.generated.resources.back
 import echoesofegypt.composeapp.generated.resources.back_button
 import echoesofegypt.composeapp.generated.resources.bg3
 import echoesofegypt.composeapp.generated.resources.gameplay
-import echoesofegypt.composeapp.generated.resources.gameplay_tuturial_text
+import echoesofegypt.composeapp.generated.resources.gameplay_tutorial_text
 import echoesofegypt.composeapp.generated.resources.overview
-import echoesofegypt.composeapp.generated.resources.overview_tuturial_text
+import echoesofegypt.composeapp.generated.resources.overview_tutorial_text
 import echoesofegypt.composeapp.generated.resources.tutorial
-import echoesofegypt.composeapp.generated.resources.tutorial_button
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -87,7 +78,7 @@ fun TutorialScreen(
             item {
                 AppText(
                     Modifier.padding(horizontal = textPadding),
-                    text = stringResource(Res.string.overview_tuturial_text)
+                    text = stringResource(Res.string.overview_tutorial_text)
                 )
             }
             item {
@@ -99,7 +90,7 @@ fun TutorialScreen(
             item {
                 AppText(
                     Modifier.padding(horizontal = textPadding),
-                    text = stringResource(Res.string.gameplay_tuturial_text)
+                    text = stringResource(Res.string.gameplay_tutorial_text)
                 )
             }
             item {
@@ -111,7 +102,7 @@ fun TutorialScreen(
             item {
                 AppText(
                     Modifier.padding(horizontal = textPadding),
-                    text = stringResource(Res.string.achievements_tuturial_text)
+                    text = stringResource(Res.string.achievements_tutorial_text)
                 )
             }
         }

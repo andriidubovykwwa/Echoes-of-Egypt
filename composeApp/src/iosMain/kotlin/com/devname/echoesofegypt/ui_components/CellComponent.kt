@@ -3,7 +3,6 @@ package com.devname.echoesofegypt.ui_components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,12 +22,10 @@ import echoesofegypt.composeapp.generated.resources.hero
 import echoesofegypt.composeapp.generated.resources.mummy
 import echoesofegypt.composeapp.generated.resources.potion
 import echoesofegypt.composeapp.generated.resources.stairs
-import echoesofegypt.composeapp.generated.resources.star
 import echoesofegypt.composeapp.generated.resources.treasure
 import echoesofegypt.composeapp.generated.resources.wall
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import platform.UIKit.NSTextAlignmentCenter
 
 @Composable
 fun CellComponent(

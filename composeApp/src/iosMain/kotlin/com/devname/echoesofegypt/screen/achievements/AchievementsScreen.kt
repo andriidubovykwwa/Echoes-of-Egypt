@@ -3,19 +3,15 @@ package com.devname.echoesofegypt.screen.achievements
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devname.echoesofegypt.data.game_params.Achievement
 import com.devname.echoesofegypt.data.game_params.AchievementType
-import com.devname.echoesofegypt.screen.Screen
 import com.devname.echoesofegypt.ui_components.AchievementComponent
 import com.devname.echoesofegypt.ui_components.MenuButton
 import com.devname.echoesofegypt.utils.UiConfig
@@ -36,7 +31,6 @@ import echoesofegypt.composeapp.generated.resources.achievements
 import echoesofegypt.composeapp.generated.resources.back
 import echoesofegypt.composeapp.generated.resources.back_button
 import echoesofegypt.composeapp.generated.resources.bg2
-import echoesofegypt.composeapp.generated.resources.tutorial
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

@@ -28,7 +28,6 @@ import com.devname.echoesofegypt.utils.UiConfig
 import echoesofegypt.composeapp.generated.resources.Res
 import echoesofegypt.composeapp.generated.resources.back
 import echoesofegypt.composeapp.generated.resources.back_button
-import echoesofegypt.composeapp.generated.resources.bg3
 import echoesofegypt.composeapp.generated.resources.bg4
 import echoesofegypt.composeapp.generated.resources.level
 import org.jetbrains.compose.resources.painterResource

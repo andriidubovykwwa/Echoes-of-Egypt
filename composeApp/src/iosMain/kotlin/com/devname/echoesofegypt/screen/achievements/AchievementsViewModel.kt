@@ -3,7 +3,6 @@ package com.devname.echoesofegypt.screen.achievements
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devname.echoesofegypt.data.repository.GameRepository
-import kotlinx.cinterop.pin
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

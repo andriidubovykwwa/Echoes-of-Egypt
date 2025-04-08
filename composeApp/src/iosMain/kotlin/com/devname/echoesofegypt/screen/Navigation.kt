@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.devname.echoesofegypt.screen.achievements.AchievementsScreen
 import com.devname.echoesofegypt.screen.game.GameScreen
+import com.devname.echoesofegypt.screen.loading.LoadingScreen
 import com.devname.echoesofegypt.screen.menu.MenuScreen
 import com.devname.echoesofegypt.screen.tutorial.TutorialScreen
 import kotlinx.serialization.Serializable
@@ -18,9 +19,9 @@ fun Navigation() {
     NavHost(
         modifier = Modifier.fillMaxSize(),
         navController = navController,
-        startDestination = Screen.Menu
+        startDestination = Screen.Loading
     ) {
-        // TODO: add splash
+        composable<Screen.Loading> { LoadingScreen(navController) }
         composable<Screen.Menu> { MenuScreen(navController) }
         composable<Screen.Game> { GameScreen(navController) }
         composable<Screen.Achievements> { AchievementsScreen(navController) }
@@ -40,4 +41,7 @@ sealed interface Screen {
 
     @Serializable
     data object Tutorial : Screen
+
+    @Serializable
+    data object Loading : Screen
 }
