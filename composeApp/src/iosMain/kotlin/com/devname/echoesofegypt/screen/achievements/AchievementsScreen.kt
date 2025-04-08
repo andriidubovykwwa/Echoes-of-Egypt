@@ -76,7 +76,7 @@ fun AchievementsScreen(
                     AchievementType.POTION_DRINKS -> state.potionDrinks
                     AchievementType.DAMAGE_TAKEN -> state.damageTaken
                     AchievementType.DAMAGE_DEALT -> state.damageDealt
-                    AchievementType.POTION_PICKUPS -> state.potionDrinks
+                    AchievementType.POTION_PICKUPS -> state.potionPickups
                     AchievementType.TREASURE_PICKUPS -> state.treasurePickups
                     AchievementType.COMPLETED_LVLS -> state.completedLvls
                     AchievementType.COMPLETED_LVLS_WITHOUT_KILLS -> state.completedLvlsWithoutKills
