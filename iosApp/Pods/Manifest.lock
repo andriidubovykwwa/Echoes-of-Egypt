@@ -1,0 +1,32 @@
+PODS:
+  - composeApp (1.0):
+    - OneSignalXCFramework (= 3.12.9)
+  - OneSignalXCFramework (3.12.9):
+    - OneSignalXCFramework/OneSignalCore (= 3.12.9)
+    - OneSignalXCFramework/OneSignalExtension (= 3.12.9)
+    - OneSignalXCFramework/OneSignalOutcomes (= 3.12.9)
+  - OneSignalXCFramework/OneSignalCore (3.12.9)
+  - OneSignalXCFramework/OneSignalExtension (3.12.9):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalOutcomes
+  - OneSignalXCFramework/OneSignalOutcomes (3.12.9):
+    - OneSignalXCFramework/OneSignalCore
+
+DEPENDENCIES:
+  - composeApp (from `../composeApp`)
+
+SPEC REPOS:
+  trunk:
+    - OneSignalXCFramework
+
+EXTERNAL SOURCES:
+  composeApp:
+    :path: "../composeApp"
+
+SPEC CHECKSUMS:
+  composeApp: 72572b2344dac37a2ed3f7f7064ec4ff075bc9c8
+  OneSignalXCFramework: 3c3ef25ecca5eae1bf80a3272c49fd1dbab96b35
+
+PODFILE CHECKSUM: c57854e4140060a622736799c27faa7a735cb521
+
+COCOAPODS: 1.16.2
