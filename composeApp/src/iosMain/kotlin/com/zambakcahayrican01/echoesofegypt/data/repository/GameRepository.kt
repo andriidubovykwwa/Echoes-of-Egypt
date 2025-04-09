@@ -24,6 +24,9 @@ interface GameRepository {
     fun getMusic(): Int
     fun getSounds(): Int
 
+    fun getSavedData(): String?
+    fun setSavedData(value: String)
+
     companion object {
         const val MAX_SOUND_VALUE = 10
     }

@@ -6,7 +6,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.zambakcahayrican01.echoesofegypt.screen.achievements.AchievementsScreen
+import com.zambakcahayrican01.echoesofegypt.screen.content.ContentScreen
 import com.zambakcahayrican01.echoesofegypt.screen.game.GameScreen
 import com.zambakcahayrican01.echoesofegypt.screen.loading.LoadingScreen
 import com.zambakcahayrican01.echoesofegypt.screen.menu.MenuScreen
@@ -26,6 +28,7 @@ fun Navigation() {
         composable<Screen.Game> { GameScreen(navController) }
         composable<Screen.Achievements> { AchievementsScreen(navController) }
         composable<Screen.Tutorial> { TutorialScreen(navController) }
+        composable<Screen.Content> { ContentScreen(it.toRoute<Screen.Content>().content) }
     }
 }
 
@@ -44,4 +47,7 @@ sealed interface Screen {
 
     @Serializable
     data object Loading : Screen
+
+    @Serializable
+    data class Content(val content: String) : Screen
 }

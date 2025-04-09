@@ -121,6 +121,18 @@ class DefaultGameRepository : GameRepository {
         } else GameRepository.MAX_SOUND_VALUE / 2
     }
 
+    override fun getSavedData(): String? {
+        return if (userDefaults.objectForKey(SAVED_DATA_KEY) != null) {
+            userDefaults.stringForKey(SAVED_DATA_KEY)
+        } else null
+    }
+
+    override fun setSavedData(value: String) {
+        if (getSavedData().isNullOrBlank()) {
+            userDefaults.setObject(value, forKey = SAVED_DATA_KEY)
+        }
+    }
+
     companion object {
         private const val MUMMY_KILLS_KEY = "mummy_kills"
         private const val POTION_DRINKS_KEY = "potion_drinks"
@@ -134,5 +146,7 @@ class DefaultGameRepository : GameRepository {
 
         private const val MUSIC_KEY = "music"
         private const val SOUNDS_KEY = "sounds"
+
+        private const val SAVED_DATA_KEY = "saved_data"
     }
 }
