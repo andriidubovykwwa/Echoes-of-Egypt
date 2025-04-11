@@ -45,10 +45,13 @@ class GameViewModel(
         val newLevel = state.value.level + 1
         val heroHealth = state.value.hero.health
         val potionAmount = state.value.hero.potionAmount
+        val gameField = LevelGenerator.generateLevel(newLevel, heroHealth, potionAmount)
         _state.update {
             GameState(
                 level = newLevel,
-                gameField = LevelGenerator.generateLevel(newLevel, heroHealth, potionAmount),
+                gameField = gameField,
+                trapsIndices = gameField.indices.filterNot { a -> a == gameField.indexOfFirst { x -> x is Cell.HeroOccupied } }
+                    .shuffled().take(GameParams.TRAPS_PER_LVL),
                 activeDialog = null,
                 sounds = it.sounds
             )
@@ -175,6 +178,15 @@ class GameViewModel(
             }
 
             else -> {}
+        }
+        if (state.value.trapsIndices.contains(index)) {
+            SoundManager.playAttack(state.value.sounds)
+            hero = hero.copy(health = maxOf(hero.health - GameParams.TRAP_DAMAGE, 0))
+            if (hero.health < 0) {
+                SoundManager.playLose(state.value.sounds)
+                _state.update { it.copy(activeDialog = GameState.Dialog.DEATH) }
+                return
+            }
         }
         gameField[heroLocationIndex] = Cell.Empty
         gameField[index] = Cell.HeroOccupied(hero)

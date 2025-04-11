@@ -10,6 +10,8 @@ data class GameState(
     val fieldWidth: Int = GameParams.DEFAULT_FIELD_WIDTH,
     val gameField: List<Cell> = LevelGenerator.generateLevel(level),
     val activeDialog: Dialog? = null,
+    val trapsIndices: List<Int> = gameField.indices.filterNot { it == gameField.indexOfFirst { x -> x is Cell.HeroOccupied } }
+        .shuffled().take(GameParams.TRAPS_PER_LVL),
     val currentLvlKills: Int = 0,
     val sounds: Int = 5
 ) {

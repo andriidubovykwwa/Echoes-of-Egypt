@@ -8,15 +8,22 @@ import androidx.compose.ui.Modifier
 import com.zambakcahayrican01.echoesofegypt.data.game_params.Cell
 
 @Composable
-fun GameFieldComponent(modifier: Modifier = Modifier, fieldWidth: Int, gameField: List<Cell>) {
+fun GameFieldComponent(
+    modifier: Modifier = Modifier,
+    fieldWidth: Int,
+    gameField: List<Cell>,
+    trapsIndices: List<Int>
+) {
     val fieldHeight = gameField.size / fieldWidth
     Row(modifier.aspectRatio(fieldWidth / fieldHeight.toFloat())) {
         repeat(fieldWidth) { x ->
             Column(Modifier.weight(1f)) {
                 repeat(fieldHeight) { y ->
+                    val index = y * fieldWidth + x
                     CellComponent(
                         Modifier.weight(1f).aspectRatio(1f),
-                        cell = gameField[y * fieldWidth + x]
+                        cell = gameField[index],
+                        hasTrap = trapsIndices.contains(index)
                     )
                 }
             }

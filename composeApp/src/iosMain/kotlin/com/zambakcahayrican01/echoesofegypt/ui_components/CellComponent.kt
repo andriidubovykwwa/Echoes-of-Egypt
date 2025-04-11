@@ -17,24 +17,43 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import com.zambakcahayrican01.echoesofegypt.data.game_params.Cell
 import echoesofegypt.composeapp.generated.resources.Res
-import echoesofegypt.composeapp.generated.resources.empty_cell
+import echoesofegypt.composeapp.generated.resources.blue_cell
+import echoesofegypt.composeapp.generated.resources.green_cell
 import echoesofegypt.composeapp.generated.resources.hero
 import echoesofegypt.composeapp.generated.resources.mummy
+import echoesofegypt.composeapp.generated.resources.orange_cell
 import echoesofegypt.composeapp.generated.resources.potion
+import echoesofegypt.composeapp.generated.resources.red_cell
 import echoesofegypt.composeapp.generated.resources.stairs
+import echoesofegypt.composeapp.generated.resources.trap
 import echoesofegypt.composeapp.generated.resources.treasure
 import echoesofegypt.composeapp.generated.resources.wall
+import echoesofegypt.composeapp.generated.resources.web
+import echoesofegypt.composeapp.generated.resources.yellow_cell
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CellComponent(
     modifier: Modifier = Modifier,
-    cell: Cell
+    cell: Cell,
+    hasTrap: Boolean
 ) {
+    val boxBackground = when (cell) {
+        is Cell.Empty -> Res.drawable.blue_cell
+        is Cell.Exit -> Res.drawable.yellow_cell
+        is Cell.MummyOccupied -> Res.drawable.red_cell
+        is Cell.Potion -> Res.drawable.yellow_cell
+        is Cell.Treasure -> Res.drawable.yellow_cell
+        is Cell.Wall -> Res.drawable.wall
+        is Cell.HeroOccupied -> {
+            if (hasTrap) Res.drawable.orange_cell
+            else Res.drawable.green_cell
+        }
+    }
     Box(
         modifier.paint(
-            painter = painterResource(if (cell == Cell.Wall) Res.drawable.wall else Res.drawable.empty_cell),
+            painter = painterResource(boxBackground),
             contentScale = ContentScale.FillBounds
         ),
         contentAlignment = Alignment.Center
@@ -48,6 +67,14 @@ fun CellComponent(
             )
 
             is Cell.HeroOccupied -> Box(Modifier.fillMaxSize(0.76f)) {
+                if (hasTrap) {
+                    Image(
+                        modifier = Modifier.fillMaxSize().align(Alignment.Center),
+                        painter = painterResource(Res.drawable.web),
+                        contentDescription = stringResource(Res.string.trap),
+                        contentScale = ContentScale.FillBounds
+                    )
+                }
                 Image(
                     modifier = Modifier.fillMaxHeight().align(Alignment.BottomCenter),
                     painter = painterResource(Res.drawable.hero),
@@ -57,11 +84,11 @@ fun CellComponent(
             }
 
             is Cell.MummyOccupied -> {
-                val mummy = (cell as Cell.MummyOccupied).mummy
+                val mummy = cell.mummy
                 Box(Modifier.fillMaxSize(0.76f)) {
                     Image(
                         modifier = Modifier.fillMaxHeight().align(Alignment.BottomCenter),
-                        painter = painterResource(Res.drawable.mummy),
+                        painter = painterResource(mummy.drawableRes),
                         contentDescription = stringResource(Res.string.mummy),
                         contentScale = ContentScale.FillHeight
                     )

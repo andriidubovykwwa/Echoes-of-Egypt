@@ -60,7 +60,8 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
         GameFieldComponent(
             Modifier.align(Alignment.Center).fillMaxWidth().padding(5.dp),
             fieldWidth = state.fieldWidth,
-            gameField = state.gameField
+            gameField = state.gameField,
+            trapsIndices = state.trapsIndices
         )
         ControlsComponent(
             Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
@@ -80,14 +81,22 @@ fun GameScreen(navController: NavController, viewModel: GameViewModel = koinView
         )
     }
     when (state.activeDialog) {
-        GameState.Dialog.LEVEL_COMPLETED -> LevelCompletedDialog(
-            onNext = viewModel::nextLevel,
-            onRestart = viewModel::restart,
-            level = state.level
-        )
+        GameState.Dialog.LEVEL_COMPLETED -> {
+            LevelCompletedDialog(
+                onNext = viewModel::nextLevel,
+                onRestart = viewModel::restart,
+                level = state.level
+            )
+        }
 
-        GameState.Dialog.DEATH -> DeathDialog(onRestart = viewModel::restart)
-        GameState.Dialog.NO_TREASURE -> NoTreasureDialog(onOk = viewModel::closeDialog)
+        GameState.Dialog.DEATH -> {
+            DeathDialog(onRestart = viewModel::restart)
+        }
+
+        GameState.Dialog.NO_TREASURE -> {
+            NoTreasureDialog(onOk = viewModel::closeDialog)
+        }
+
         null -> {}
     }
 }
